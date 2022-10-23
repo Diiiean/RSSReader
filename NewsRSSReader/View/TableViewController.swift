@@ -3,26 +3,16 @@ import UIKit
 import SnapKit
 import SafariServices
 class TableViewController: UIViewController, NewsPresenterDelegate, UITextFieldDelegate {
-    
-    
-   
-    
     private var rssItems: [RSSItemModel]?
     private let presenter = NewsPresenter()
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(EntryCell.self, forCellReuseIdentifier: EntryCell.identifier)
-        //tableView.translatesAutoresizingMaskIntoConstraints = false
        return tableView
     }()
-    
     lazy var searchTextField: UITextField = {
         let textField = UITextField(frame: CGRect(x: 10, y: 10, width: (self.navigationController?.navigationBar.frame.size.width)!, height: 30))
-       // let textField = UITextField()
-
-        //textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Enter URL"
-        //textField.sizeToFit()
         textField.keyboardType = UIKeyboardType.default
         textField.returnKeyType = UIReturnKeyType.done
         textField.autocorrectionType = UITextAutocorrectionType.no
@@ -32,47 +22,13 @@ class TableViewController: UIViewController, NewsPresenterDelegate, UITextFieldD
         textField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         return textField
     }()
-//    private let searchButt: UIButton = {
-//        let button = UIButton()
-//        button.setTitle("Test Button", for: .normal)
-//         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-//        return button
-//    }()
-    // Vertical Stack View
-//    lazy var vStackView: UIStackView = {
-//        let stack = UIStackView()
-//        stack.translatesAutoresizingMaskIntoConstraints = false
-//        stack.axis = .vertical
-//        stack.alignment = .leading
-//        stack.spacing = 7
-//        stack.distribution = .equalSpacing
-//        //stack.distribution = .fillProportionally
-//        stack.clipsToBounds = true
-//        stack.addArrangedSubview(searchTextField)
-//        stack.addArrangedSubview(tableView)
-//
-//
-//
-//        return stack
-//    }()
-//    private let searchController = UISearchController(searchResultsController: nil)
-//    private var searchBarIsEmpty: Bool {
-//        guard let text = searchController.searchBar.text else { return false }
-//        return text.isEmpty
-//    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUp()
         setUpViews()
     }
-   
     func setUp() {
         self.navigationItem.title = "News"
-              navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                                            target: self,
-                                                            action: #selector(didTapAdd))
-        
         //SearchTextField
        self.navigationItem.titleView = searchTextField
         searchTextField.delegate = self
@@ -84,83 +40,24 @@ class TableViewController: UIViewController, NewsPresenterDelegate, UITextFieldD
         // Presenter
         presenter.setViewDelegate(delegate: self)
         fetchData(urlString: nil)
-     
     }
-        @objc private func didTapAdd() {
-            let alert = UIAlertController(title: "Check another RSS Chanel", message: "Add RSS Chanel", preferredStyle: .alert)
-            alert.addTextField { field in
-                field.placeholder = "Enter channel URL"
-            }
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-            alert.addAction(UIAlertAction(title: "Done", style: .default, handler: { [weak self] (_) in
-                if let field = alert.textFields?.first {
-                    if let text = field.text, !text.isEmpty {
-                        
-                        self?.fetchData(urlString: text)
-
-                    }
-                }
-            }))
-            present(alert, animated: true)
-        }
-        
     @objc private func didPullToRefresh() {
         fetchData(urlString: nil)
     }
-    @objc private func buttonAction() {
-        
-    }
-    
     func setUpViews() {
         view.addSubview(tableView)
-       
-        //view.addSubview(searchTextField)
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
-//        searchTextField.snp.makeConstraints { make in
-//            make.edges.equalTo()
-//
-//        }
-        //TABLE
-//        tableView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor).isActive = true
-//        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-//        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-//        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-//        tableView.snp.makeConstraints { make in
-//
-//            make.edges.equalTo(vStackView)
-//
-//
-//        }
-        //TEXTFIELD
-//        searchTextField.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        searchTextField.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-//        searchTextField.bottomAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        searchTextField.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-//        searchTextField.snp.makeConstraints { make in
-////            make.size.equalTo(CGSize(width: view.snp.width, height: 30))
-//            make.edges.equalTo(vStackView)
-//
-//
-//        }
-        
-        tableView.estimatedRowHeight = 155.0
-        tableView.rowHeight = UITableView.automaticDimension
-       
-        
-        
-        }
+//        tableView.estimatedRowHeight = 155.0
+//        tableView.rowHeight = UITableView.automaticDimension
+}
     func fetchData(urlString: String?) {
         rssItems?.removeAll()
-        
         if urlString == nil {
-            
             presenter.parseFeed(url: "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml") { [weak self] (rssItems) in
                 self?.rssItems = rssItems
-               
-               
-                DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                     
                     self?.tableView.refreshControl?.endRefreshing()
                     self?.tableView.reloadSections(IndexSet(integer: 0), with: .left)
@@ -171,9 +68,7 @@ class TableViewController: UIViewController, NewsPresenterDelegate, UITextFieldD
             presenter.parseFeed(url: urlString!) { [weak self] (rssItems) in
                 
                 self?.rssItems = rssItems
-               
-                
-                DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                     
                     self?.tableView.refreshControl?.endRefreshing()
                     self?.tableView.reloadSections(IndexSet(integer: 0), with: .left)
@@ -183,44 +78,17 @@ class TableViewController: UIViewController, NewsPresenterDelegate, UITextFieldD
         }
        
     }
-   
-//    private func configureSearchController() {
-//        //Set up Search Controller
-//        searchController.loadViewIfNeeded()
-//        searchController.searchResultsUpdater = self
-//        searchController.searchBar.delegate = self
-//        searchController.obscuresBackgroundDuringPresentation = false
-//        searchController.searchBar.enablesReturnKeyAutomatically = false
-//        searchController.searchBar.returnKeyType = UIReturnKeyType.done
-//        self.navigationItem.searchController = searchController
-//        self.navigationItem.hidesSearchBarWhenScrolling = false
-//        definesPresentationContext = true
-//        searchController.searchBar.placeholder = "Enter link"
-//    }
 
     //MARK: - TextField Delegates methods
-    
-  
     func textFieldDidBeginEditing(_ textField: UITextField) {
            print("TextField did begin editing method called")
        }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         searchTextField.endEditing(true)
     }
-
-       func textFieldDidEndEditing(_ textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
            if let textFieldUrl = searchTextField.text {
-               presenter.parseFeed(url: textFieldUrl) { [weak self] (rssItems) in
-                   self?.rssItems = rssItems
-                  
-                  
-                   DispatchQueue.main.async {
-                       
-                       self?.tableView.refreshControl?.endRefreshing()
-                       self?.tableView.reloadSections(IndexSet(integer: 0), with: .left)
-                   }
-                   
-               }
+               fetchData(urlString: textFieldUrl)
            }
            searchTextField.text = ""
        }
