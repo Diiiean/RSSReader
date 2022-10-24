@@ -70,7 +70,6 @@
 				04C774AA2903CFE600EB9AB7 /* View */,
 				04C774A92903CFD300EB9AB7 /* Model */,
 				04C774A82903CF9F00EB9AB7 /* Presenter */,
-				04C7749429034ECF00EB9AB7 /* Presenter.swift */,
 				04C7749929034ED200EB9AB7 /* Assets.xcassets */,
 				04C7749029034ECF00EB9AB7 /* AppDelegate.swift */,
 				04C7749229034ECF00EB9AB7 /* SceneDelegate.swift */,
@@ -83,6 +82,7 @@
 		04C774A82903CF9F00EB9AB7 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				04C7749429034ECF00EB9AB7 /* Presenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
